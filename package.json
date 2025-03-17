@@ -1,5 +1,6 @@
 {
   "name": "adhdsl",
+  "author": "apostoli",
   "version": "0.0.1",
   "module": "src/index.ts",
   "type": "module",
@@ -8,6 +9,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "exports": {},
+  "files": [
+    "src"
+  ]
 }
-
