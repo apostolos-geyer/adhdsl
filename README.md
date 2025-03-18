@@ -3,8 +3,9 @@
 apostoli's dumb hypertext domain specific language
 
 just another frontend reactivity library, because i think there wasnt enough of them yet
-arose by accident because my class made me do a vanilla html/js assignment and i think signals are better than mvc, but
-external libs weren't available, and what i ended up using was close enough to roll my own little reactivity and signals library.
+arose by accident because my class made me do a vanilla html/js assignment and i didnt like imperatively creating reactivity.. it looked visually yucky.
+
+external libs weren't available, and what i ended up making was close enough to roll my own little reactivity and signals library.
 
 ## install:
 
@@ -84,7 +85,6 @@ const app = () => {
     <div>
       <h1>stupid counter</h1>
       ${incrementButton}
-      <br />
       ${switchColourButton}
     </div>
   `;
