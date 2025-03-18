@@ -98,7 +98,7 @@ export function initNodePlaceholders(
       const frag = document.createDocumentFragment();
       // Recursively append replacement content.
       const appendReplacement = (rep: NodeInterpolatedValue) => {
-        if (typeof rep === "string" || typeof rep === "number") {
+        if (isPrimitive(rep)) {
           frag.appendChild(document.createTextNode(`${rep}`));
         } else if (isSubject(rep)) {
           console.log("inferred subject", rep, rep.value);
@@ -118,11 +118,16 @@ export function initNodePlaceholders(
             const [first, second] = rep;
             if (isSubject(first)) {
               console.log("subject and callback");
-              const node = document.createTextNode(`${first.value}`);
+
+              let node = document.createTextNode("");
               const unsubscribe = first.subscribe(
                 {
                   update(newValue) {
-                    node.textContent = `${(second as (v: any) => any)(newValue)}`;
+                    if (isPrimitive(newValue)) {
+                      node.textContent = `${(second as (v: any) => any)(newValue)}`;
+                    } else if (newValue instanceof Node) {
+                      node.replaceWith(newValue);
+                    }
                   },
                 },
                 true,
@@ -187,3 +192,6 @@ type AttributeInterpolatedValue =
   | string
   | AttrInterp<"subjectiveAttributes">
   | AttrInterp<"eventHandlers">;
+
+const isPrimitive = (v: unknown): v is string | number =>
+  typeof v === "string" || typeof v === "number";
