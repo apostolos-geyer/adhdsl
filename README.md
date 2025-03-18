@@ -81,13 +81,14 @@ const app = () => {
   // we can even interpolate entire elements without losing event listeners
   // or subscriptions
 
-  return html`
-    <div>
-      <h1>stupid counter</h1>
-      ${incrementButton}
-      ${switchColourButton}
-    </div>
-  `;
+  // these parens are unnecessary except without them syntax highlighting breaks,
+  return (html`
+      <div>
+        <h1>stupid counter</h1>
+        ${incrementButton}
+        ${switchColourButton}
+      </div>
+  `);
 };
 
 document.body.appendChild(app());
