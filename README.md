@@ -140,17 +140,26 @@ bind attributes to subjects or derivations.
 
 ```ts
 html`
-  <input
+  <button
     ${subjective({
-      value: nameSubject,
       class: using(isValid, ok => ok ? "ok" : "err"),
       disabled: isLoading,
+      title: hint,
     })}
   >
+    submit
+  </button>
 `;
 ```
 
-attribute values update reactively. subscriptions are torn down when the element leaves the dom.
+values update reactively. subscriptions tear down when the element leaves the dom.
+
+how values map to attributes:
+- `true` → attribute present with empty value (`disabled=""`). this is the right thing for boolean attributes — `disabled="false"` would still disable the element.
+- `false`, `null`, `undefined` → attribute removed.
+- anything else → `setAttribute(name, String(value))`.
+
+caveat: `subjective` writes *attributes*, not *properties*. for `<input>` `value`, `<input type=checkbox>` `checked`, `<select>` `value`, etc., the attribute only sets the *initial* value — after the user interacts, the attribute and property diverge. write the property directly via a ref or a small effect; a `model` directive for two-way binding is on the todo list.
 
 mid-attribute static interpolation works for primitives (`<a href="/u/${id}">`) but reactive mid-attribute interpolation doesn't — use `subjective` instead.
 

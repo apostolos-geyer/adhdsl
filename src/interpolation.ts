@@ -52,7 +52,7 @@ export class Derived<R> {
 
   attachAttribute(element: Element, attribute: string) {
     const unsubscribe = this.#subscribeAll((value) => {
-      element.setAttribute(attribute, `${value}`);
+      setReactiveAttribute(element, attribute, value);
     });
     unsubscribeOnElementRemoved(element, unsubscribe);
   }
@@ -303,12 +303,33 @@ const attachSubjectAttribute = <T>(
   const unsubscribe = subject.subscribe(
     {
       update(newValue) {
-        element.setAttribute(attribute, `${newValue}`);
+        setReactiveAttribute(element, attribute, newValue);
       },
     },
     true,
   );
   unsubscribeOnElementRemoved(element, unsubscribe);
+};
+
+/**
+ * Apply a reactive value to an attribute. Handles three cases:
+ *   - `true`  → presence (empty value), as boolean attributes care about
+ *               presence not content (`disabled="false"` still disables).
+ *   - `false` / `null` / `undefined` → remove the attribute.
+ *   - anything else → setAttribute(name, String(value)).
+ */
+const setReactiveAttribute = (
+  element: Element,
+  name: string,
+  value: unknown,
+): void => {
+  if (value === false || value === null || value === undefined) {
+    element.removeAttribute(name);
+  } else if (value === true) {
+    element.setAttribute(name, "");
+  } else {
+    element.setAttribute(name, `${value}`);
+  }
 };
 
 /* ----------------------------- types ----------------------------- */
